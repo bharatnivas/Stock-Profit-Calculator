@@ -21,27 +21,44 @@
         
         .container {
             background: #ffffff;
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 40px;
-            max-width: 450px;
+            max-width: 800px;
             width: 100%;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
             border: 1px solid #e5e5e5;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
         }
         
         h2 {
+            grid-column: 1 / -1;
             text-align: center;
             color: #333;
             font-size: 28px;
             font-weight: 600;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             padding-bottom: 16px;
-            border-bottom: 1px solid #e5e5e5;
+            border-bottom: 2px solid #e5e5e5;
+        }
+        
+        .input-box, .results-box {
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .input-box {
+            background: #fff;
+        }
+        
+        .results-box {
+            background: #f8f9fa;
         }
         
         .input-group {
-            margin-bottom: 24px;
-            position: relative;
+            margin-bottom: 20px;
         }
         
         label {
@@ -57,94 +74,97 @@
             padding: 16px 20px;
             border: 2px solid #e5e5e5;
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 18px;
             background: #fff;
             color: #333;
-            transition: all 0.2s ease;
+            transition: border-color 0.2s ease;
         }
         
         input:focus {
             outline: none;
             border-color: #4285f4;
-            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+            box-shadow: 0 0 0 4px rgba(66, 133, 244, 0.1);
         }
         
-        .results-card {
-            background: #f8f9fa;
-            border: 1px solid #e5e5e5;
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 24px;
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #e5e5e5;
+            font-size: 15px;
         }
         
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .result-item:last-child {
+            border-bottom: none;
         }
         
-        th {
+        .result-label {
             color: #666;
             font-weight: 500;
-            font-size: 14px;
-            padding: 12px 0;
-            text-align: left;
         }
         
-        td {
-            padding: 16px 0;
+        .result-value {
             font-size: 22px;
             font-weight: 700;
             font-family: 'SF Mono', Monaco, monospace;
             color: #333;
+            min-width: 120px;
+            text-align: right;
         }
         
-        .profit {
-            color: #00c851 !important;
-            background: #e8f5e8;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-top: 8px;
-        }
-        
-        .loss {
-            color: #d93025 !important;
-            background: #fce8e6;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-top: 8px;
-        }
+        .profit { color: #00c851 !important; }
+        .loss { color: #d93025 !important; }
         
         .overall {
-            background: #e3f2fd;
-            border: 1px solid #bbdefb;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 16px;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px solid #2196f3;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 20px;
             text-align: center;
+            box-shadow: 0 4px 16px rgba(33, 150, 243, 0.15);
         }
         
-        .overall strong {
-            font-size: 24px;
+        .overall-title {
+            font-size: 16px;
             color: #1976d2;
-            font-weight: 700;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
         
-        .checkbox-group {
-            margin: 24px 0;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .overall-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1565c0;
         }
         
-        input[type="checkbox"] {
-            width: auto;
-            margin: 0;
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                max-width: 500px;
+                padding: 32px 24px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
         }
         
         @media (max-width: 480px) {
             .container {
                 margin: 10px;
-                padding: 32px 24px;
+                padding: 24px 20px;
+            }
+            
+            .input-group {
+                margin-bottom: 16px;
+            }
+            
+            input {
+                padding: 14px 16px;
+                font-size: 16px;
             }
         }
     </style>
@@ -153,42 +173,37 @@
     <div class="container">
         <h2>Stock Calculator</h2>
         
-        <div class="input-group">
-            <label>Buy Price (₹)</label>
-            <input type="number" id="buyPrice" value="50" step="0.01">
+        <div class="input-box">
+            <div class="input-group">
+                <label>Buy Price (₹)</label>
+                <input type="number" id="buyPrice" value="50" step="0.01">
+            </div>
+            <div class="input-group">
+                <label>Quantity</label>
+                <input type="number" id="quantity" value="50">
+            </div>
+            <div class="input-group">
+                <label>Current Price (₹)</label>
+                <input type="number" id="currentPrice" value="100" step="0.01">
+            </div>
         </div>
         
-        <div class="input-group">
-            <label>Quantity</label>
-            <input type="number" id="quantity" value="50">
-        </div>
-        
-        <div class="input-group">
-            <label>Current Price (₹)</label>
-            <input type="number" id="currentPrice" value="100" step="0.01">
-        </div>
-        
-        <div class="results-card">
-            <table>
-                <tr>
-                    <th>Total Invested</th>
-                    <td id="invested">₹2,500</td>
-                </tr>
-                <tr>
-                    <th>Current Value</th>
-                    <td id="currentValue">₹5,000</td>
-                </tr>
-                <tr>
-                    <th>Profit/Loss</th>
-                    <td id="profit">₹+2,500</td>
-                </tr>
-                <tr>
-                    <th>Profit %</th>
-                    <td id="profitPct">+100%</td>
-                </tr>
-            </table>
+        <div class="results-box">
+            <div class="result-item">
+                <span class="result-label">Total Invested</span>
+                <span id="invested" class="result-value">₹2,500</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Profit/Loss</span>
+                <span id="profit" class="result-value profit">₹+2,500</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Profit %</span>
+                <span id="profitPct" class="result-value profit">+100%</span>
+            </div>
             <div id="overall" class="overall">
-                <strong>Overall Amount: <span id="overallAmt">₹7,500</span></strong>
+                <div class="overall-title">Overall Amount</div>
+                <div id="overallAmt" class="overall-value">₹5,000</div>
             </div>
         </div>
     </div>
@@ -199,26 +214,23 @@
             const quantity = parseInt(document.getElementById('quantity').value) || 0;
             const currentPrice = parseFloat(document.getElementById('currentPrice').value) || 0;
             
-            const invested = (buyPrice * quantity).toLocaleString('en-IN');
-            const currentValue = (currentPrice * quantity).toLocaleString('en-IN');
+            const invested = (buyPrice * quantity);
             const profitAmt = (currentPrice - buyPrice) * quantity;
-            const profit = profitAmt.toLocaleString('en-IN');
             const profitPercent = buyPrice > 0 ? ((currentPrice - buyPrice) / buyPrice * 100).toFixed(2) : '0.00';
-            const overallAmount = (buyPrice * quantity) + (currentPrice * quantity);
-            const overallFormatted = overallAmount.toLocaleString('en-IN');
+            const overallAmount = invested + profitAmt; // Total Invested + Profit/Loss
             
-            document.getElementById('invested').textContent = `₹${invested}`;
-            document.getElementById('currentValue').textContent = `₹${currentValue}`;
+            // Format numbers
+            document.getElementById('invested').textContent = `₹${invested.toLocaleString('en-IN')}`;
             
             const profitEl = document.getElementById('profit');
-            profitEl.innerHTML = `₹${profitAmt >= 0 ? '+' : ''}${profit}`;
-            profitEl.className = profitAmt >= 0 ? 'profit' : 'loss';
+            profitEl.innerHTML = `₹${profitAmt >= 0 ? '+' : ''}${Math.abs(profitAmt).toLocaleString('en-IN')}`;
+            profitEl.className = `result-value ${profitAmt >= 0 ? 'profit' : 'loss'}`;
             
             const pctEl = document.getElementById('profitPct');
             pctEl.innerHTML = `${profitAmt >= 0 ? '+' : ''}${profitPercent}%`;
-            pctEl.className = profitAmt >= 0 ? 'profit' : 'loss';
+            pctEl.className = `result-value ${profitAmt >= 0 ? 'profit' : 'loss'}`;
             
-            document.getElementById('overallAmt').textContent = `₹${overallFormatted}`;
+            document.getElementById('overallAmt').textContent = `₹${overallAmount.toLocaleString('en-IN')}`;
         }
         
         ['buyPrice', 'quantity', 'currentPrice'].forEach(id => {
