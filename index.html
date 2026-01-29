@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Calculator</title>
+    <style>
+        body { font-family: Arial; max-width: 400px; margin: 50px auto; padding: 20px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: right; }
+        th { background: #f2f2f2; text-align: left; }
+        .profit { color: green; font-weight: bold; }
+        .loss { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Stock Profit Calculator</h2>
+    <label>Buy Price per Share (₹): <input type="number" id="buyPrice" value="50" step="0.01"></label>
+    <label>Quantity Held: <input type="number" id="quantity" value="50"></label>
+    <label>Current Price (₹): <input type="number" id="currentPrice" value="100" step="0.01"></label>
+    
+    <table>
+        <tr><th>Total Invested</th><td id="invested">₹2,500</td></tr>
+        <tr><th>Current Value</th><td id="currentValue">₹5,000</td></tr>
+        <tr><th>Profit/Loss</th><td id="profit">₹+2,500</td></tr>
+        <tr><th>Profit %</th><td id="profitPct">+100%</td></tr>
+    </table>
+
+    <script>
+        function calculate() {
+            const buyPrice = parseFloat(document.getElementById('buyPrice').value) || 0;
+            const quantity = parseInt(document.getElementById('quantity').value) || 0;
+            const currentPrice = parseFloat(document.getElementById('currentPrice').value) || 0;
+            
+            const invested = (buyPrice * quantity).toLocaleString('en-IN', {maximumFractionDigits: 0});
+            const currentValue = (currentPrice * quantity).toLocaleString('en-IN', {maximumFractionDigits: 0});
+            const profitAmt = currentPrice - buyPrice;
+            const profit = (profitAmt * quantity).toLocaleString('en-IN', {maximumFractionDigits: 0});
+            const profitPercent = ((profitAmt / buyPrice) * 100).toFixed(2);
+            
+            document.getElementById('invested').textContent = `₹${invested}`;
+            document.getElementById('currentValue').textContent = `₹${currentValue}`;
+            
+            const profitEl = document.getElementById('profit');
+            profitEl.textContent = `₹${profitAmt >= 0 ? '+' : ''}${profit}`;
+            profitEl.className = profitAmt >= 0 ? 'profit' : 'loss';
+            
+            const pctEl = document.getElementById('profitPct');
+            pctEl.textContent = `${profitAmt >= 0 ? '+' : ''}${profitPercent}%`;
+            pctEl.className = profitAmt >= 0 ? 'profit' : 'loss';
+        }
+        
+        // Auto-calculate on input
+        document.getElementById('buyPrice').addEventListener('input', calculate);
+        document.getElementById('quantity').addEventListener('input', calculate);
+        document.getElementById('currentPrice').addEventListener('input', calculate);
+        calculate(); // Initial calc
+    </script>
+</body>
+</html>
